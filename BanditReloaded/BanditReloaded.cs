@@ -128,9 +128,6 @@ namespace BanditReloaded
             //SniperContent.SpotterDebuffOnHit = DamageAPI.ReserveDamageType();
             //SniperContent.Shock5sNoDamage = DamageAPI.ReserveDamageType();
 
-            AssignSkills();
-            CreateMaster();
-
             BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/survivorpod");
         }
 
