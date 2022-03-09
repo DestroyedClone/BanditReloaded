@@ -111,13 +111,14 @@ namespace BanditReloaded
             Modules.Config.ReadConfig(base.Config);
             //LoadResources();
             BanditContent.LoadResources();
-            Modules.Assets.InitializeAssets();
+            //Modules.Assets.InitializeAssets();
             CreatePrefab();
             CreateDisplayPrefab();
             SetupStats();
+            if (Modules.Config.useOldModel) EnableStatusConditions();
             SetupEffects();
-            Modules.Achievements.SniperUnlockables.RegisterUnlockables();
-            Modules.SniperSkins.RegisterSkins();
+            //Modules.Achievements.SniperUnlockables.RegisterUnlockables();
+            Modules.BanditSkins.RegisterSkins();
             AssignSkills();
             if (scepterInstalled) SetupScepter();
             RegisterSurvivor();
@@ -129,26 +130,6 @@ namespace BanditReloaded
 
             AssignSkills();
             CreateMaster();
-
-            if (Modules.Config.useOldModel)
-            {
-                //BanditBody.AddComponent<ClassicMenuAnimComponent>();  //seems to be broken
-                AddClassicSkin();
-                On.RoR2.CameraRigController.OnEnable += (orig, self) =>
-                {
-                    SceneDef sd = RoR2.SceneCatalog.GetSceneDefForCurrentScene();
-                    if (sd && sd.baseSceneName.Equals("lobby"))
-                    {
-                        self.enableFading = false;
-                    }
-                    orig(self);
-                };
-                base.StartCoroutine(this.FixIce());
-            }
-            else
-            {
-                BanditBody.GetComponentInChildren<ModelSkinController>().skins[1].unlockableDef = null;
-            }
 
             BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/survivorpod");
         }
@@ -1312,80 +1293,40 @@ namespace BanditReloaded
             afk.shouldTapButton = false;
         }
 
-        public static void AddClassicSkin()    //credits to rob
+        //https://github.com/Moffein/RiskyMod/blob/533e5f847d950482e102387d35662fe6d477f1b3/RiskyMod/Enemies/Mobs/Lunar/LunarWisp.cs#L24
+        private void EnableStatusConditions()
         {
-            GameObject bodyPrefab = BanditBody;
-            GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
-            CharacterModel characterModel = model.GetComponent<CharacterModel>();
-
-            ModelSkinController skinController = null;
-            if (model.GetComponent<ModelSkinController>())
-                skinController = model.GetComponent<ModelSkinController>();
-            else
-                skinController = model.AddComponent<ModelSkinController>();
-
-            SkinnedMeshRenderer mainRenderer = characterModel.mainSkinnedMeshRenderer;
-            if (mainRenderer == null)
+            SetStateOnHurt ssoh = BanditBody.GetComponent<SetStateOnHurt>();
+            if (!ssoh)
             {
-                CharacterModel.RendererInfo[] bRI = characterModel.baseRendererInfos;
-                if (bRI != null)
+                ssoh = BanditBody.AddComponent<SetStateOnHurt>();
+            }
+            ssoh.hitThreshold = 0.5f;
+            ssoh.canBeHitStunned = false;
+            ssoh.canBeStunned = false;
+            ssoh.canBeFrozen = true;
+
+            EntityStateMachine body = null;
+            EntityStateMachine weapon = null;
+            EntityStateMachine[] stateMachines = BanditBody.GetComponents<EntityStateMachine>();
+            foreach (EntityStateMachine esm in stateMachines)
+            {
+                switch (esm.customName)
                 {
-                    foreach (CharacterModel.RendererInfo rendererInfo in bRI)
-                    {
-                        if (rendererInfo.renderer is SkinnedMeshRenderer)
-                        {
-                            mainRenderer = (SkinnedMeshRenderer)rendererInfo.renderer;
-                            break;
-                        }
-                    }
-                    if (mainRenderer != null)
-                    {
-                        characterModel.mainSkinnedMeshRenderer = mainRenderer;
-                    }
+                    case "Body":
+                        body = esm;
+                        break;
+                    case "Weapon":
+                        weapon = esm;
+                        break;
+                    default:
+                        break;
                 }
             }
 
-            R2API.LanguageAPI.Add("BANDITRELOADEDBODY_DEFAULT_SKIN_NAME", "Default");
-
-            R2API.LoadoutAPI.SkinDefInfo skinDefInfo = new R2API.LoadoutAPI.SkinDefInfo();
-            skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
-            skinDefInfo.GameObjectActivations = Array.Empty<SkinDef.GameObjectActivation>();
-            skinDefInfo.Icon = R2API.LoadoutAPI.CreateSkinIcon(new Color(143f / 255f, 132f / 255f, 106f / 255f), Color.cyan, new Color(92f / 255f, 136f / 255f, 167f / 255f), new Color(25f / 255f, 50f / 255f, 57f / 255f));
-            skinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
-            {
-                new SkinDef.MeshReplacement
-                {
-                    renderer = mainRenderer,
-                    mesh = mainRenderer.sharedMesh
-                }
-            };
-            skinDefInfo.Name = "BANDITRELOADEDBODY_DEFAULT_SKIN_NAME";
-            skinDefInfo.NameToken = "BANDITRELOADEDBODY_DEFAULT_SKIN_NAME";
-            skinDefInfo.RendererInfos = characterModel.baseRendererInfos;
-            skinDefInfo.RootObject = model;
-            skinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
-            skinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
-
-            SkinDef defaultSkin = R2API.LoadoutAPI.CreateNewSkinDef(skinDefInfo);
-
-            skinController.skins = new SkinDef[1]
-            {
-                defaultSkin,
-            };
-        }
-
-        private IEnumerator FixIce()
-        {
-            for (; ; )
-            {
-                if (BanditBody != null && BanditBody.GetComponent<SetStateOnHurt>() != null && BanditBody.GetComponent<SetStateOnHurt>().idleStateMachine != null && BanditBody.GetComponent<SetStateOnHurt>().idleStateMachine.Length != 0)
-                {
-                    BanditBody.GetComponent<SetStateOnHurt>().idleStateMachine[0] = BanditBody.GetComponent<SetStateOnHurt>().idleStateMachine[1];
-                    yield return null;
-                }
-                yield return new WaitForFixedUpdate();
-            }
-            yield break;
+            ssoh.targetStateMachine = body;
+            ssoh.idleStateMachine = new EntityStateMachine[] { weapon };
+            ssoh.hurtState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.HurtStateFlyer));
         }
     }
 }
