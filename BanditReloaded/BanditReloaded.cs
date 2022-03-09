@@ -131,7 +131,7 @@ namespace BanditReloaded
             AssignSkills();
             CreateMaster();
 
-            BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/survivorpod");
+            BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/survivorpod");
         }
 
         private void BuildProjectiles()
@@ -161,7 +161,7 @@ namespace BanditReloaded
 
         private void CreatePrefab()
         {
-            BanditBody = R2API.PrefabAPI.InstantiateClone(Modules.Config.useOldModel ? Resources.Load<GameObject>("prefabs/characterbodies/banditbody") : Resources.Load<GameObject>("prefabs/characterbodies/bandit2body"), "BanditReloadedBody", true);
+            BanditBody = R2API.PrefabAPI.InstantiateClone(Modules.Config.useOldModel ? LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/banditbody") : LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/bandit2body"), "BanditReloadedBody", true);
             BanditBodyName = BanditBody.name;
 
             BanditContent.bodyPrefabs.Add(BanditBody);
@@ -170,11 +170,11 @@ namespace BanditReloaded
         {
             if (!Modules.Config.useOldModel)
             {
-                BanditDisplay = Resources.Load<GameObject>("Prefabs/CharacterDisplays/Bandit2Display");
+                BanditDisplay = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterDisplays/Bandit2Display");
             }
             else
             {
-                BanditDisplay = Resources.Load<GameObject>("Prefabs/CharacterBodies/BanditBody").GetComponent<ModelLocator>().modelTransform.gameObject;
+                BanditDisplay = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/BanditBody").GetComponent<ModelLocator>().modelTransform.gameObject;
             }
         }
 
@@ -774,12 +774,12 @@ namespace BanditReloaded
 
         private void SetupAcidBomb()
         {
-            AcidBombObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/banditgrenadeprojectile"), "BanditReloadedAcidBomb", true);
+            AcidBombObject = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/banditgrenadeprojectile"), "BanditReloadedAcidBomb", true);
             AcidBombGhostObject = R2API.PrefabAPI.InstantiateClone(AcidBombObject.GetComponent<ProjectileController>().ghostPrefab, "BanditReloadedAcidBombGhost", false);
             BanditContent.projectilePrefabs.Add(AcidBombObject);
             AcidBombObject.GetComponent<ProjectileController>().ghostPrefab = AcidBombGhostObject;
 
-            GameObject puddleObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/crocoleapacid"), "BanditReloadedAcidBombPuddle", true);
+            GameObject puddleObject = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/crocoleapacid"), "BanditReloadedAcidBombPuddle", true);
             BanditContent.projectilePrefabs.Add(puddleObject);
             ProjectileDamage puddleDamage = puddleObject.GetComponent<ProjectileDamage>();
             puddleDamage.damageType = DamageType.WeakOnHit;
@@ -789,7 +789,7 @@ namespace BanditReloaded
             pdz.lifetime = 5f;
             pdz.damageCoefficient = AcidBomb.acidDamageCoefficient / AcidBomb.damageCoefficient;
 
-            GameObject abImpact = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/impacteffects/engimineexplosion"), "BanditReloadedAcidEffect", false);
+            GameObject abImpact = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/engimineexplosion"), "BanditReloadedAcidEffect", false);
             EffectComponent ec = abImpact.GetComponent<EffectComponent>();
             //ec.applyScale = true;
             //ec.disregardZScale = false;
@@ -821,7 +821,7 @@ namespace BanditReloaded
 
         private void SetupThermite()
         {
-            ThermiteObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/thermite"), "BanditReloadedThermite", true);
+            ThermiteObject = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/thermite"), "BanditReloadedThermite", true);
             ThermiteGhostObject = R2API.PrefabAPI.InstantiateClone(ThermiteObject.GetComponent<ProjectileController>().ghostPrefab, "BanditReloadedThermiteGhost", false);
             BanditContent.projectilePrefabs.Add(ThermiteObject);
             ThermiteObject.GetComponent<ProjectileController>().ghostPrefab = ThermiteGhostObject;
@@ -869,7 +869,7 @@ namespace BanditReloaded
 
             ThermiteBomb.projectilePrefab = ThermiteObject;
 
-            GameObject thermiteBurnEffect = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/impacteffects/missileexplosionvfx"), "BanditReloadedThermiteBurnEffect", false);
+            GameObject thermiteBurnEffect = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/missileexplosionvfx"), "BanditReloadedThermiteBurnEffect", false);
             thermiteBurnEffect.GetComponent<EffectComponent>().soundName = "Play_BanditReloaded_burn";
             BanditContent.effectDefs.Add(new EffectDef(thermiteBurnEffect));
             BootlegThermiteOverlapAttack.burnEffectPrefab = thermiteBurnEffect;
@@ -878,7 +878,7 @@ namespace BanditReloaded
 
         private void SetupClusterBomb()
         {
-            ClusterBombObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/BanditClusterBombSeed"), "BanditReloadedClusterBomb", true);
+            ClusterBombObject = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/BanditClusterBombSeed"), "BanditReloadedClusterBomb", true);
             BanditContent.projectilePrefabs.Add(ClusterBombObject);
 
             ClusterBombGhostObject = R2API.PrefabAPI.InstantiateClone(BanditContent.assetBundle.LoadAsset<GameObject>("DynamiteBundle.prefab"), "BanditReloadedClusterBombGhost", true);
@@ -999,7 +999,7 @@ namespace BanditReloaded
 
         private GameObject SetupDynamiteExplosion()
         {
-            GameObject dynamiteExplosion = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/omniexplosionvfx"), "BanditReloadedDynamiteExplosion", false);
+            GameObject dynamiteExplosion = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/omniexplosionvfx"), "BanditReloadedDynamiteExplosion", false);
             ShakeEmitter se = dynamiteExplosion.AddComponent<ShakeEmitter>();
             se.shakeOnStart = true;
             se.duration = 0.5f;
@@ -1021,7 +1021,7 @@ namespace BanditReloaded
 
         private void SetupClusterBomblet()
         {
-            ClusterBombletObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/BanditClusterGrenadeProjectile"), "BanditReloadedClusterBomblet", true);
+            ClusterBombletObject = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/BanditClusterGrenadeProjectile"), "BanditReloadedClusterBomblet", true);
             BanditContent.projectilePrefabs.Add(ClusterBombletObject);
 
             ClusterBombletGhostObject = R2API.PrefabAPI.InstantiateClone(BanditContent.assetBundle.LoadAsset<GameObject>("DynamiteStick.prefab"), "BanditReloadedClusterBombletGhost", true);
@@ -1055,7 +1055,7 @@ namespace BanditReloaded
 
         private GameObject SetupDynamiteBombletExplosion()
         {
-            GameObject dynamiteExplosion = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/impacteffects/explosionvfx"), "BanditReloadedDynamiteBombletExplosion", false);
+            GameObject dynamiteExplosion = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/explosionvfx"), "BanditReloadedDynamiteBombletExplosion", false);
 
             EffectComponent ec = dynamiteExplosion.GetComponent<EffectComponent>();
             ec.soundName = "Play_engi_M2_explo";
@@ -1066,7 +1066,7 @@ namespace BanditReloaded
 
         private void CreateMaster()
         {
-            BanditMonsterMaster = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/charactermasters/commandomonstermaster"), "BanditReloadedMonsterMaster", true);
+            BanditMonsterMaster = R2API.PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/commandomonstermaster"), "BanditReloadedMonsterMaster", true);
             BanditContent.masterPrefabs.Add(BanditMonsterMaster);
 
             CharacterMaster cm = BanditMonsterMaster.GetComponent<CharacterMaster>();
