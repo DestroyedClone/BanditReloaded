@@ -125,7 +125,6 @@ namespace BanditReloaded
             SniperContent.SpotterDebuffOnHit = DamageAPI.ReserveDamageType();
             SniperContent.Shock5sNoDamage = DamageAPI.ReserveDamageType();
 
-            SetupProjectiles();
             SetAttributes();
             AssignSkills();
             CreateMaster();
@@ -152,6 +151,14 @@ namespace BanditReloaded
             }
 
             BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/survivorpod");
+        }
+
+        private void BuildProjectiles()
+        {
+            SetupThermite();
+            SetupAcidBomb();
+            SetupClusterBomb();
+            SetupClusterBomblet();
         }
 
         private void AddHooks()
@@ -746,7 +753,7 @@ namespace BanditReloaded
             ThermiteObject.GetComponent<ProjectileDamage>().damageType = DamageType.Stun1s;
 
             ProjectileSimple ps = ThermiteObject.GetComponent<ProjectileSimple>();
-            ps.velocity = 100f;
+            ps.desiredForwardSpeed = 100f;
             ps.lifetime = 20f;
 
             ProjectileDamage pd = ThermiteObject.GetComponent<ProjectileDamage>();
@@ -851,7 +858,7 @@ namespace BanditReloaded
             pie.blastProcCoefficient = 1f;
             pie.impactEffect = SetupDynamiteExplosion();
 
-            pie.explosionSoundString = "";
+            pie.explosionEffect = null;
             pie.lifetimeExpiredSound = null;
             pie.projectileHealthComponent = hc;
             pie.transformSpace = ProjectileImpactExplosion.TransformSpace.World;
@@ -859,7 +866,7 @@ namespace BanditReloaded
             Destroy(ClusterBombObject.GetComponent<ProjectileStickOnImpact>());
 
             ProjectileSimple ps = ClusterBombObject.GetComponent<ProjectileSimple>();
-            ps.velocity = 60f;
+            ps.desiredForwardSpeed = 60f;
             ps.lifetime = 25f;
 
             ClusterBombObject.GetComponent<Rigidbody>().useGravity = true;
@@ -949,13 +956,13 @@ namespace BanditReloaded
             pie.lifetime = 1.5f;
             pie.timerAfterImpact = false;
             pie.blastProcCoefficient = Modules.Config.cbBombletProcCoefficient;
-            pie.explosionSoundString = "";
+            pie.explosionEffect = null;
             pie.impactEffect = SetupDynamiteBombletExplosion();
 
             Destroy(ClusterBombletObject.GetComponent<ProjectileStickOnImpact>());
 
             ProjectileSimple ps = ClusterBombletObject.GetComponent<ProjectileSimple>();
-            ps.velocity = 12f;
+            ps.desiredForwardSpeed = 12f;
 
             ProjectileDamage pd = ClusterBombletObject.GetComponent<ProjectileDamage>();
             pd.damageType = DamageType.IgniteOnHit;
@@ -1239,13 +1246,6 @@ namespace BanditReloaded
             afk.shouldTapButton = false;
         }
 
-        private void SetupProjectiles()
-        {
-            SetupThermite();
-            SetupAcidBomb();
-            SetupClusterBomb();
-            SetupClusterBomblet();
-        }
 
         private void SetupBanditBody()
         {
