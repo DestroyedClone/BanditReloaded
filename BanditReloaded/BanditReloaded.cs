@@ -52,16 +52,6 @@ namespace BanditReloaded
 
         readonly Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
 
-        public void RegisterLanguageTokens()
-        {
-            //TODO: Replace this with the proper way of loading languages once someone figures that out.
-            string languageFileName = "BanditReloaded.txt";
-            string pathToLanguage = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\language";
-            LanguageAPI.AddPath(System.IO.Path.Combine(pathToLanguage + @"\en", languageFileName));
-            //LanguageAPI.AddPath(System.IO.Path.Combine(pathToLanguage + @"\es-419", languageFileName));
-            //LanguageAPI.AddPath(System.IO.Path.Combine(pathToLanguage + @"\RU", languageFileName));
-        }
-
         public void Start()
         {
             CastSmokescreenNoDelay.destealthMaterial = EntityStates.Commando.CommandoWeapon.CastSmokescreenNoDelay.destealthMaterial;
@@ -104,7 +94,7 @@ namespace BanditReloaded
             {
                 BanditBody.GetComponentInChildren<ModelSkinController>().skins[1].unlockableDef = null;
             }
-            RegisterLanguageTokens();
+            Modules.Tokens.RegisterLanguageTokens();
 
             BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/survivorpod");
             GameObject banditDisplay;
