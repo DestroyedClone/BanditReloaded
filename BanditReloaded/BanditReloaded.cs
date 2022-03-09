@@ -80,47 +80,16 @@ namespace BanditReloaded
         public Color BanditColor = new Color(0.8039216f, 0.482352942f, 0.843137264f);
         String BanditBodyName = "";
 
-        private readonly Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+        readonly Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
 
         public void RegisterLanguageTokens()
         {
-            R2API.LanguageAPI.Add("BANDITRELOADEDBODY_DEFAULT_SKIN_NAME", "Default");
-            R2API.LanguageAPI.Add("BANDITRELOADED_PASSIVE_NAME", "Quickdraw");
-            R2API.LanguageAPI.Add("BANDITRELOADED_PASSIVE_DESCRIPTION", "The Bandit <style=cIsUtility>instantly reloads</style> his primary when using other skills.");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_OUTRO_FLAVOR", "..and so he left, with his pyrrhic plunder.");
-            R2API.LanguageAPI.Add("BANDITRELOADED_MAIN_ENDING_ESCAPE_FAILURE_FLAVOR", "..and so he vanished, unable to escape his past.");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_BODY_NAME", "Classic Bandit");
-            R2API.LanguageAPI.Add("BANDITRELOADED_BODY_SUBTITLE", "Wanted Dead or Alive");
-
-            string BanditDesc = "The Bandit is a hit-and-run survivor who uses dirty tricks to assassinate his targets.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
-            BanditDesc += "< ! > Space out your skill usage to keep firing Blast, or dump them all at once for massive damage!" + Environment.NewLine + Environment.NewLine;
-            BanditDesc += "< ! > Use grenades to apply debuffs to enemies, boosting the damage of Lights Out." + Environment.NewLine + Environment.NewLine;
-            BanditDesc += "< ! > Use Smokebomb to either run away or to stun many enemies at once." + Environment.NewLine + Environment.NewLine;
-            BanditDesc += "< ! > Dealing a killing blow with Lights Out allows you to chain many skills together, allowing for maximum damage AND safety." + Environment.NewLine + Environment.NewLine;
-            R2API.LanguageAPI.Add("BANDITRELOADED_BODY_DESC", BanditDesc);
-
-            R2API.LanguageAPI.Add("KEYWORD_BANDITRELOADED_EXECUTE", "<style=cKeywordName>Executing</style><style=cSub>The ability <style=cIsHealth>instantly kills</style> enemies below <style=cIsHealth>" + TakeDamage.specialExecuteThreshold.ToString("P0").Replace(" ", "").Replace(",", "") + " HP</style>.</style>");
-            R2API.LanguageAPI.Add("KEYWORD_BANDITRELOADED_RAPIDFIRE", "<style=cKeywordName>Rapid-Fire</style><style=cSub>The skill fires faster if you click faster.</style>");
-            R2API.LanguageAPI.Add("KEYWORD_BANDITRELOADED_THERMITE", "<style=cKeywordName>Thermite</style><style=cSub>Reduce movement speed by <style=cIsDamage>15%</style> per stack. Reduce armor by <style=cIsDamage>2.5</style> per stack.</style>");
-
-            R2API.LanguageAPI.Add("KEYWORD_BANDITRELOADED_DEBUFFBOOST", "<style=cKeywordName>Debuff Boosted</style><style=cSub>Gain <style=cIsDamage>+" + TakeDamage.specialDebuffBonus.ToString("P0").Replace(" ", "").Replace(",", "") + " TOTAL damage</style> for each unique debuff on the enemy.");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_PRIMARY_NAME", "Blast");
-            R2API.LanguageAPI.Add("BANDITRELOADED_PRIMARY_ALT_NAME", "Scatter");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_SECONDARY_NAME", "Dynamite Toss");
-            R2API.LanguageAPI.Add("BANDITRELOADED_SECONDARY_ALT_NAME", "Thermite Flare");
-            R2API.LanguageAPI.Add("BANDITRELOADED_SECONDARY_ALT2_NAME", "Acid Bomb");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_UTILITY_NAME", "Smokebomb");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_SPECIAL_NAME", "Lights Out");
-            R2API.LanguageAPI.Add("BANDITRELOADED_SPECIAL_ALT_NAME", "Rack em Up");
-
-            R2API.LanguageAPI.Add("BANDITRELOADED_SPECIAL_SCEPTER_NAME", "Decapitate");
-            R2API.LanguageAPI.Add("BANDITRELOADED_SPECIAL_ALT_SCEPTER_NAME", "Fistful of Lead");
+            //TODO: Replace this with the proper way of loading languages once someone figures that out.
+            string languageFileName = "BanditReloaded.txt";
+            string pathToLanguage = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\language";
+            LanguageAPI.AddPath(System.IO.Path.Combine(pathToLanguage + @"\en", languageFileName));
+            //LanguageAPI.AddPath(System.IO.Path.Combine(pathToLanguage + @"\es-419", languageFileName));
+            //LanguageAPI.AddPath(System.IO.Path.Combine(pathToLanguage + @"\RU", languageFileName));
         }
 
         public void Start()
