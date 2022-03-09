@@ -29,12 +29,13 @@ namespace BanditReloaded
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     class BanditReloaded : BaseUnityPlugin
     {
-        public static SurvivorDef item;
+        public static SurvivorDef BanditSurvivorDef;
 
         public ReloadSkillDef primaryBlastDef, primaryScatterDef;
         public SkillDef utilityDefA, utilityAltDef, thermiteDef, acidBombDef, specialLightsOutDef, clusterBombDef, specialBarrageDef, specialBarrageScepterDef, specialLightsOutScepterDef;
 
         public static GameObject BanditBody = null;
+        GameObject BanditDisplay = null;
         public GameObject BanditMonsterMaster = null;
 
         public GameObject AcidBombObject = null;
@@ -58,7 +59,7 @@ namespace BanditReloaded
         {
             pluginInfo = Info;
             Setup();
-            Nemesis.Setup();
+            //Nemesis.Setup();
             AddHooks();
             ContentManager.collectContentPackProviders += ContentManager_collectContentPackProviders;
 
@@ -98,7 +99,7 @@ namespace BanditReloaded
 
             if (Modules.Config.useOldModel)
             {
-                DisplaySetup.DisplayRules(BanditBody);
+                Modules.ItemDisplays.RegisterDisplays();
             }
             Modules.ItemDisplays.RegisterDisplays();
         }
@@ -175,26 +176,31 @@ namespace BanditReloaded
 
         private void CreateDisplayPrefab()
         {
-            GameObject banditDisplay;
             if (!Modules.Config.useOldModel)
             {
-                banditDisplay = Resources.Load<GameObject>("Prefabs/CharacterDisplays/Bandit2Display");
+                BanditDisplay = Resources.Load<GameObject>("Prefabs/CharacterDisplays/Bandit2Display");
             }
             else
             {
-                banditDisplay = Resources.Load<GameObject>("Prefabs/CharacterBodies/BanditBody").GetComponent<ModelLocator>().modelTransform.gameObject;
+                BanditDisplay = Resources.Load<GameObject>("Prefabs/CharacterBodies/BanditBody").GetComponent<ModelLocator>().modelTransform.gameObject;
             }
-            item = SurvivorDef.CreateInstance<SurvivorDef>();
-            item.cachedName = "BanditReloaded";
-            item.bodyPrefab = BanditBody;
-            item.descriptionToken = "BANDITRELOADED_BODY_DESC";
-            item.displayPrefab = banditDisplay;
-            item.primaryColor = BanditColor;
-            item.outroFlavorToken = "BANDITRELOADED_OUTRO_FLAVOR";
-            item.desiredSortPosition = 100f;
-            ModContentPack.survivorDefs.Add(item);
-            ModContentPack.banditReloadedSurvivor = item;
         }
+
+        public void RegisterSurvivor()
+        {
+            BanditSurvivorDef = SurvivorDef.CreateInstance<SurvivorDef>();
+            BanditSurvivorDef.cachedName = "BanditReloaded";
+            BanditSurvivorDef.bodyPrefab = BanditBody;
+            BanditSurvivorDef.descriptionToken = "BANDITRELOADED_BODY_DESC";
+            BanditSurvivorDef.displayPrefab = BanditDisplay;
+            BanditSurvivorDef.primaryColor = BanditColor;
+            BanditSurvivorDef.outroFlavorToken = "BANDITRELOADED_OUTRO_FLAVOR";
+            BanditSurvivorDef.desiredSortPosition = 100f;
+            ModContentPack.survivorDefs.Add(BanditSurvivorDef);
+            ModContentPack.banditReloadedSurvivor = BanditSurvivorDef;
+        }
+
+
 
         private void AssignSkills()
         {
@@ -1254,6 +1260,8 @@ namespace BanditReloaded
 
             ModContentPack.bodyPrefabs.Add(BanditBody);
         }
+
+
 
         private void CreateBuffs()
         {
