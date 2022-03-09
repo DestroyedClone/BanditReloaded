@@ -16,7 +16,7 @@ namespace EntityStates.BanditReloadedSkills
             this.duration = AcidBomb.baseDuration / this.attackSpeedStat;
             Ray aimRay = base.GetAimRay();
             base.StartAimMode(aimRay, 2f, false);
-            if (BanditReloaded.BanditReloaded.useOldModel)
+            if (BanditReloaded.Modules.Config.useOldModel)
             {
                 base.PlayAnimation("Gesture", "FireRevolver", "FireRevolver.playbackRate", this.duration);
             }

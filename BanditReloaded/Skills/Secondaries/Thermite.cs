@@ -20,7 +20,7 @@ namespace EntityStates.BanditReloadedSkills
             Util.PlaySound("Play_Bandit_m2_shot", base.gameObject);
 
             this.animator = base.GetModelAnimator();
-            if (BanditReloaded.BanditReloaded.useOldModel)
+            if (BanditReloaded.Modules.Config.useOldModel)
             {
                 base.PlayAnimation("Gesture, Additive", "PrepRevolver", "PrepRevolver.playbackRate", this.duration * 0.5f);
                 base.PlayAnimation("Gesture, Override", "PrepRevolver", "PrepRevolver.playbackRate", this.duration * 0.5f);

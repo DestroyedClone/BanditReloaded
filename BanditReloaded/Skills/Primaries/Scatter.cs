@@ -27,7 +27,7 @@ namespace EntityStates.BanditReloadedSkills
             Ray aimRay = base.GetAimRay();
             base.StartAimMode(aimRay, 2f, false);
 
-            if (BanditReloaded.BanditReloaded.useOldModel)
+            if (BanditReloaded.Modules.Config.useOldModel)
             {
                 base.PlayAnimation("Gesture, Additive", "FireShotgun", "FireShotgun.playbackRate", this.maxDuration * 0.8f);
                 base.PlayAnimation("Gesture, Override", "FireShotgun", "FireShotgun.playbackRate", this.maxDuration * 0.8f);

@@ -15,7 +15,7 @@ namespace EntityStates.BanditReloadedSkills
             this.duration = PrepBarrageScepter.baseDuration / this.attackSpeedStat;
 
             this.animator = base.GetModelAnimator();
-            if (BanditReloaded.BanditReloaded.useOldModel)
+            if (BanditReloaded.Modules.Config.useOldModel)
             {
                 base.PlayAnimation("Gesture, Additive", "PrepRevolver", "PrepRevolver.playbackRate", this.duration);
                 base.PlayAnimation("Gesture, Override", "PrepRevolver", "PrepRevolver.playbackRate", this.duration);

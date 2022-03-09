@@ -10,7 +10,7 @@ namespace EntityStates.BanditReloadedSkills
 		public override void OnEnter()
 		{
 			base.OnEnter();
-			if (BanditReloaded.BanditReloaded.useOldModel)
+			if (BanditReloaded.Modules.Config.useOldModel)
             {
 				this.outer.SetNextStateToMain();
 				return;
