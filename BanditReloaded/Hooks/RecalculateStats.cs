@@ -21,6 +21,7 @@ namespace BanditReloaded.Hooks
             }
             if (sender.HasBuff(ModContentPack.cloakDamageBuff))
             {
+                //damageStat *= 1.5f
                 args.damageMultAdd += .5f;
             }
         }
