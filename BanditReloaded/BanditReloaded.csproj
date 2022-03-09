@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<Compile Remove="Arthithiccer.cs" />
+		<Compile Remove="DisplayRules.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -40,9 +41,6 @@
 		</Reference>
 		<Reference Include="R2API">
 			<HintPath>..\References\lib\R2API.dll</HintPath>
-		</Reference>
-		<Reference Include="RoR2">
-			<HintPath>..\References\lib\RoR2.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

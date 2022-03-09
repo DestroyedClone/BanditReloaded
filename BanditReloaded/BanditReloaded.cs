@@ -51,6 +51,44 @@ namespace BanditReloaded
         String BanditBodyName = "";
 
         readonly Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
+        public static bool scepterInstalled = false;
+        public static PluginInfo pluginInfo;
+
+        public void Awake()
+        {
+            pluginInfo = Info;
+            Setup();
+            Nemesis.Setup();
+            AddHooks();
+            ContentManager.collectContentPackProviders += ContentManager_collectContentPackProviders;
+
+        }
+        private void CompatSetup()
+        {
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter"))
+            {
+                scepterInstalled = true;
+            }
+            /*if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Kingpinush.KingKombatArena") && arenaNerf)
+            {
+                arenaPluginLoaded = true;
+            }
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2"))
+            {
+                starstormInstalled = true;
+            }*/
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private void SetupScepter()
+        {
+            //AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(specialLightsOutScepterDef, BanditBodyName, SkillSlot.Special, 0);
+            //AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(specialBarrageScepterDef, BanditBodyName, SkillSlot.Special, 1);
+        }
+        private void ContentManager_collectContentPackProviders(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
+        {
+            addContentPackProvider(new ModContentPack());
+        }
 
         public void Start()
         {
@@ -62,13 +100,31 @@ namespace BanditReloaded
             {
                 DisplaySetup.DisplayRules(BanditBody);
             }
+            Modules.ItemDisplays.RegisterDisplays();
         }
 
-        public void Awake()
+        public void Setup()
         {
+            CompatSetup();
+            Modules.Config.ReadConfig(base.Config);
+            //LoadResources();
             ModContentPack.LoadResources();
-            Modules.Config.ReadConfig(Config);
+            Modules.Assets.InitializeAssets();
             SetupBanditBody();
+            CreateDisplayPrefab();
+            SetupStats();
+            SetupEffects();
+            Modules.Achievements.SniperUnlockables.RegisterUnlockables();
+            Modules.SniperSkins.RegisterSkins();
+            AssignSkills();
+            if (scepterInstalled) SetupScepter();
+            RegisterSurvivor();
+            Modules.Tokens.RegisterLanguageTokens();
+            CreateMaster();
+            BuildProjectiles();
+            SniperContent.SpotterDebuffOnHit = DamageAPI.ReserveDamageType();
+            SniperContent.Shock5sNoDamage = DamageAPI.ReserveDamageType();
+
             SetupProjectiles();
             SetAttributes();
             AssignSkills();
@@ -94,9 +150,24 @@ namespace BanditReloaded
             {
                 BanditBody.GetComponentInChildren<ModelSkinController>().skins[1].unlockableDef = null;
             }
-            Modules.Tokens.RegisterLanguageTokens();
 
             BanditBody.GetComponent<CharacterBody>().preferredPodPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/survivorpod");
+        }
+
+        private void AddHooks()
+        {
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStats.RecalculateStatsAPI_GetStatCoefficients;
+            //On.RoR2.GlobalEventManager.OnHitEnemy += OnHitEnemy.GlobalEventManager_OnHitEnemy;
+            On.RoR2.HealthComponent.TakeDamage += TakeDamage.HealthComponent_TakeDamage;
+            //new DetectArenaMode();
+            //new ScopeNeedleRifle();
+            //new AIDrawAggro();
+            //new StealBuffVisuals();
+            // FixReloadMenuUI();
+        }
+
+        private void CreateDisplayPrefab()
+        {
             GameObject banditDisplay;
             if (!Modules.Config.useOldModel)
             {
@@ -116,16 +187,6 @@ namespace BanditReloaded
             item.desiredSortPosition = 100f;
             ModContentPack.survivorDefs.Add(item);
             ModContentPack.banditReloadedSurvivor = item;
-
-            TakeDamage.AddHook();
-            RecalculateStats.AddHook();
-            CloakDamage.AddHook();
-
-            ContentManager.collectContentPackProviders += ContentManager_collectContentPackProviders;
-        }
-        private void ContentManager_collectContentPackProviders(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
-        {
-            addContentPackProvider(new ModContentPack());
         }
 
         private void AssignSkills()
@@ -600,11 +661,6 @@ namespace BanditReloaded
             ModContentPack.skillFamilies.Add(utilitySkillFamily);
             ModContentPack.skillFamilies.Add(specialSkillFamily);
 
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter"))
-            {
-                SetupScepter();
-            }
-
             ModContentPack.entityStates.Add(typeof(Blast));
             ModContentPack.entityStates.Add(typeof(CastSmokescreenNoDelay));
             ModContentPack.entityStates.Add(typeof(Assassinate));
@@ -914,13 +970,6 @@ namespace BanditReloaded
 
             ModContentPack.effectDefs.Add(new EffectDef(dynamiteExplosion));
             return dynamiteExplosion;
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private void SetupScepter()
-        {
-            AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(specialLightsOutScepterDef, BanditBodyName, SkillSlot.Special, 0);
-            AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(specialBarrageScepterDef, BanditBodyName, SkillSlot.Special, 1);
         }
 
         private void SetAttributes()
