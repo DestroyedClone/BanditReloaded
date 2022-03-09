@@ -148,7 +148,7 @@ namespace BanditReloaded.Modules
 
             itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup
             {
-                keyAsset = RoR2Content.Items.Incubator,
+                keyAsset = JunkContent.Items.Incubator,
                 displayRuleGroup = new DisplayRuleGroup
                 {
                     rules = new ItemDisplayRule[]{new ItemDisplayRule{ruleType = ItemDisplayRuleType.ParentedPrefab,followerPrefab = LoadDisplay("DisplayAncestralIncubator"),

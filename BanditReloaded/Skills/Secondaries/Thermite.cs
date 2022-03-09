@@ -66,7 +66,7 @@ namespace EntityStates.BanditReloadedSkills
             if (!playedAnim && base.fixedAge > this.duration*0.5f)
             {
                 playedAnim = true;
-                if (!BanditReloaded.BanditReloaded.useOldModel)
+                if (!BanditReloaded.Modules.Config.useOldModel)
                 {
                     base.PlayAnimation("Gesture, Additive", "FireSideWeapon", "FireSideWeapon.playbackRate", this.duration);
                 }

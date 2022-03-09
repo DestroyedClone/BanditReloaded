@@ -36,6 +36,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Reference Include="KinematicCharacterController">
+		  <HintPath>libs\KinematicCharacterController.dll</HintPath>
+		</Reference>
 		<Reference Include="MMHOOK_RoR2">
 			<HintPath>..\References\lib\MMHOOK_RoR2.dll</HintPath>
 		</Reference>

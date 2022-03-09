@@ -31,18 +31,18 @@ namespace EntityStates.BanditReloadedSkills
 
             base.PlayAnimation("Gesture, Additive", "MainToSide", "MainToSide.playbackRate", this.duration);
             Util.PlaySound(PrepLightsOutScepter.prepSoundString, base.gameObject);
-            this.defaultCrosshairPrefab = base.characterBody.crosshairPrefab;
-            base.characterBody.crosshairPrefab = PrepLightsOutScepter.specialCrosshairPrefab;
+            this.defaultCrosshairPrefab = base.characterBody._defaultCrosshairPrefab;
+            base.characterBody._defaultCrosshairPrefab = PrepLightsOutScepter.specialCrosshairPrefab;
 
             BanditHelpers.TriggerQuickdraw(base.characterBody.skillLocator);
 
             if (base.characterBody)
             {
                 base.characterBody.SetAimTimer(this.duration);
-                if (base.characterBody.HasBuff(ModContentPack.cloakDamageBuff))
+                if (base.characterBody.HasBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff))
                 {
-                    base.characterBody.ClearTimedBuffs(ModContentPack.cloakDamageBuff);
-                    base.characterBody.AddTimedBuff(ModContentPack.cloakDamageBuff, 1.2f);
+                    base.characterBody.ClearTimedBuffs(BanditReloaded.Modules.BanditContent.cloakDamageBuff);
+                    base.characterBody.AddTimedBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff, 1.2f);
                 }
             }
         }
@@ -59,8 +59,8 @@ namespace EntityStates.BanditReloadedSkills
 
         public override void OnExit()
         {
-            base.characterBody.crosshairPrefab = this.defaultCrosshairPrefab;
-            if (!BanditReloaded.BanditReloaded.useOldModel)
+            base.characterBody._defaultCrosshairPrefab = this.defaultCrosshairPrefab;
+            if (!BanditReloaded.Modules.Config.useOldModel)
             {
                 if (this.animator)
                 {
@@ -101,7 +101,7 @@ namespace EntityStates.BanditReloadedSkills
             Util.PlaySound(FireLightsOutScepter.attackSoundString, base.gameObject);
 
             this.animator = base.GetModelAnimator();
-            if (BanditReloaded.BanditReloaded.useOldModel)
+            if (BanditReloaded.Modules.Config.useOldModel)
             {
                 base.PlayAnimation("Gesture, Additive", "FireRevolver");
                 base.PlayAnimation("Gesture, Override", "FireRevolver");
@@ -150,7 +150,7 @@ namespace EntityStates.BanditReloadedSkills
         public override void OnExit()
         {
             BanditHelpers.ConsumeCloakDamageBuff(base.characterBody);
-            if (earlyExit && !BanditReloaded.BanditReloaded.useOldModel)
+            if (earlyExit && !BanditReloaded.Modules.Config.useOldModel)
             {
                 if (this.animator)
                 {
@@ -171,7 +171,7 @@ namespace EntityStates.BanditReloadedSkills
             base.FixedUpdate();
             if (base.fixedAge >= this.duration && base.isAuthority)
             {
-                if (!BanditReloaded.BanditReloaded.useOldModel)
+                if (!BanditReloaded.Modules.Config.useOldModel)
                 {
                     if (this.animator)
                     {

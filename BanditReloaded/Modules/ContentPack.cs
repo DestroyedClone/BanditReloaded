@@ -18,6 +18,8 @@ using Mono.Cecil.Cil;
 using System.Reflection;
 using RoR2.ContentManagement;
 using System.Collections;
+using BanditReloaded;
+using BanditReloaded.Components;
 
 
 namespace BanditReloaded.Modules
@@ -98,66 +100,41 @@ namespace BanditReloaded.Modules
 
         public void CreateBuffs()
         {
-            BuffDef spotterDef = ScriptableObject.CreateInstance<BuffDef>();
-            spotterDef.buffColor = new Color(1f, 1f, 1f);
-            spotterDef.canStack = false;
-            spotterDef.isDebuff = false;
-            spotterDef.name = "SniperClassicSpotted";
-            spotterDef.iconSprite = SniperContent.assetBundle.LoadAsset<Sprite>("BuffSpotterReady.png");
-            FixScriptableObjectName(spotterDef);
-            SniperContent.buffDefs.Add(spotterDef);
-            SniperContent.spotterBuff = spotterDef;
+            BuffDef LightsOutBuffDef = BuffDef.CreateInstance<BuffDef>();
+            LightsOutBuffDef.buffColor = BanditReloaded.BanditColor;
+            LightsOutBuffDef.canStack = false;
+            LightsOutBuffDef.isDebuff = true;
+            LightsOutBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffFullCritIcon");
+            LightsOutBuffDef.name = "BanditReloadedMarkedForDeath";
+            BanditContent.buffDefs.Add(LightsOutBuffDef);
+            BanditContent.lightsOutBuff = LightsOutBuffDef;
 
-            BuffDef spotterCooldownDef = ScriptableObject.CreateInstance<BuffDef>();
-            spotterCooldownDef.buffColor = new Color(1f, 1f, 1f);
-            spotterCooldownDef.canStack = true;
-            spotterCooldownDef.iconSprite = SniperContent.assetBundle.LoadAsset<Sprite>("BuffSpotterCooldown.png");
-            spotterCooldownDef.isDebuff = false;
-            spotterCooldownDef.name = "SniperClassicSpottedCooldown";
-            FixScriptableObjectName(spotterCooldownDef);
-            SniperContent.buffDefs.Add(spotterCooldownDef);
-            SniperContent.spotterCooldownBuff = spotterCooldownDef;
+            BuffDef ThermiteBuffDef = BuffDef.CreateInstance<BuffDef>();
+            ThermiteBuffDef.buffColor = BanditReloaded.BanditColor;
+            ThermiteBuffDef.canStack = true;
+            ThermiteBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffOnFireIcon");
+            ThermiteBuffDef.isDebuff = true;
+            ThermiteBuffDef.name = "BanditReloadedThermite";
+            BanditContent.buffDefs.Add(ThermiteBuffDef);
+            BanditContent.thermiteBuff = ThermiteBuffDef;
 
-            BuffDef spotterStatDebuffDef = ScriptableObject.CreateInstance<BuffDef>();
-            spotterStatDebuffDef.buffColor = new Color(0.8392157f, 0.227450982f, 0.227450982f);
-            spotterStatDebuffDef.canStack = false;
-            spotterStatDebuffDef.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texbuffweakicon");
-            spotterStatDebuffDef.isDebuff = true;
-            spotterStatDebuffDef.name = "SniperClassicSpottedStatDebuff";
-            FixScriptableObjectName(spotterStatDebuffDef);
-            SniperContent.buffDefs.Add(spotterStatDebuffDef);
-            SniperContent.spotterStatDebuff = spotterStatDebuffDef;
+            BuffDef cloakDamageBuffDef = BuffDef.CreateInstance<BuffDef>();
+            cloakDamageBuffDef.buffColor = BanditReloaded.BanditColor;
+            cloakDamageBuffDef.canStack = false;
+            cloakDamageBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffFullCritIcon");
+            cloakDamageBuffDef.name = "BanditReloadedCloakDamage";
+            cloakDamageBuffDef.isDebuff = false;
+            BanditContent.buffDefs.Add(cloakDamageBuffDef);
+            BanditContent.cloakDamageBuff = cloakDamageBuffDef;
 
-            BuffDef spotterScepterDef = ScriptableObject.CreateInstance<BuffDef>();
-            spotterScepterDef.buffColor = new Color(78f * 2f / 255f, 80f * 2f / 255f, 111f * 2f / 255f);
-            spotterScepterDef.canStack = false;
-            spotterScepterDef.isDebuff = false;
-            spotterScepterDef.name = "SniperClassicSpottedScepter";
-            spotterScepterDef.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/bufficons/texbuffcloakicon");
-            FixScriptableObjectName(spotterScepterDef);
-            SniperContent.buffDefs.Add(spotterScepterDef);
-            SniperContent.spotterScepterBuff = spotterScepterDef;
-
-            BuffDef spotterPlayerReadyDef = ScriptableObject.CreateInstance<BuffDef>();
-            spotterPlayerReadyDef.buffColor = new Color(1f, 1f, 1f);
-            spotterPlayerReadyDef.canStack = false;
-            spotterPlayerReadyDef.isDebuff = false;
-            spotterPlayerReadyDef.name = "SniperClassicSpotterPlayerReady";
-            spotterPlayerReadyDef.iconSprite = SniperContent.assetBundle.LoadAsset<Sprite>("BuffSpotterReady.png");
-            FixScriptableObjectName(spotterPlayerReadyDef);
-            SniperContent.buffDefs.Add(spotterPlayerReadyDef);
-            SniperContent.spotterPlayerReadyBuff = spotterPlayerReadyDef;
-
-            BuffDef spotterPlayerCooldownDef = ScriptableObject.CreateInstance<BuffDef>();
-            spotterPlayerCooldownDef.buffColor = new Color(1f, 1f, 1f);
-            spotterPlayerCooldownDef.canStack = true;
-            spotterPlayerCooldownDef.iconSprite = SniperContent.assetBundle.LoadAsset<Sprite>("BuffSpotterCooldown.png");
-            spotterPlayerCooldownDef.isCooldown = true;
-            spotterPlayerCooldownDef.isDebuff = false;
-            spotterPlayerCooldownDef.name = "SniperClassicSpotterPlayerCooldown";
-            FixScriptableObjectName(spotterPlayerCooldownDef);
-            SniperContent.buffDefs.Add(spotterPlayerCooldownDef);
-            SniperContent.spotterPlayerCooldownBuff = spotterPlayerCooldownDef;
+            BuffDef skullBuffDef = BuffDef.CreateInstance<BuffDef>();
+            skullBuffDef.buffColor = BanditReloaded.BanditColor;
+            skullBuffDef.canStack = true;
+            skullBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffBanditSkullIcon");
+            skullBuffDef.isDebuff = true;
+            skullBuffDef.name = "BanditReloadedSkull";
+            BanditContent.buffDefs.Add(skullBuffDef);
+            BanditContent.skullBuff = skullBuffDef;
         }
 
     }

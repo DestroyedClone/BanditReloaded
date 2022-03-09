@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using RoR2;
 using UnityEngine;
+using BanditReloaded.Modules;
 
 namespace BanditReloaded
 {
@@ -25,7 +26,7 @@ namespace BanditReloaded
         }
         private void Update()
         {
-            if (!cb || cb.GetBuffCount(ModContentPack.thermiteBuff) <= 0)
+            if (!cb || cb.GetBuffCount(BanditContent.thermiteBuff) <= 0)
             {
                 DestroySelf();
             }

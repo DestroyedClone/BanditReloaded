@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using BanditReloaded.Modules;
 
 namespace BanditReloaded.Components
 {
@@ -47,8 +48,8 @@ namespace BanditReloaded.Components
                         this.stuckObjectHealthComponent = this.stuckObject.GetComponent<HealthComponent>();
                         if (this.stuckObjectHealthComponent.body)
                         {
-                            this.stuckObjectHealthComponent.body.AddBuff(ModContentPack.thermiteBuff);
-                            this.cachedThermiteCount = this.stuckObjectHealthComponent.body.GetBuffCount(ModContentPack.thermiteBuff);
+                            this.stuckObjectHealthComponent.body.AddBuff(BanditContent.thermiteBuff);
+                            this.cachedThermiteCount = this.stuckObjectHealthComponent.body.GetBuffCount(BanditContent.thermiteBuff);
                         }
 
                         if (this.projectileDamage)
@@ -95,9 +96,9 @@ namespace BanditReloaded.Components
 
         public void OnDestroy()
         {
-            if (this.stuckObject && this.stuckObjectHealthComponent.body && this.stuckObjectHealthComponent.body.HasBuff(ModContentPack.thermiteBuff))
+            if (this.stuckObject && this.stuckObjectHealthComponent.body && this.stuckObjectHealthComponent.body.HasBuff(BanditContent.thermiteBuff))
             {
-                this.stuckObjectHealthComponent.body.RemoveBuff(ModContentPack.thermiteBuff);
+                this.stuckObjectHealthComponent.body.RemoveBuff(BanditContent.thermiteBuff);
             }
         }
 
@@ -209,7 +210,7 @@ namespace BanditReloaded.Components
                         }
                         if (bt.stuckObject && bt.stuckObjectHealthComponent && bt.stuckObjectHealthComponent.body)
                         {
-                            bt.cachedThermiteCount = bt.stuckObjectHealthComponent.body.GetBuffCount(ModContentPack.thermiteBuff);
+                            bt.cachedThermiteCount = bt.stuckObjectHealthComponent.body.GetBuffCount(BanditContent.thermiteBuff);
                         }
                     }
                 }

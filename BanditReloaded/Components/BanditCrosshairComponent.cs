@@ -13,7 +13,7 @@ namespace BanditReloaded
         {
             cb = base.GetComponent<CharacterBody>();
             skills = cb.skillLocator;
-            defaultCrosshairPrefab = cb.crosshairPrefab;
+            defaultCrosshairPrefab = cb._defaultCrosshairPrefab;
         }
         private void FixedUpdate()
         {
@@ -21,16 +21,16 @@ namespace BanditReloaded
             {
                 if (skills.primary.maxStock > 1 && skills.primary.stock > 0)
                 {
-                    if (cb.crosshairPrefab == emptyCrosshairPrefab)
+                    if (cb._defaultCrosshairPrefab == emptyCrosshairPrefab)
                     {
-                        cb.crosshairPrefab = defaultCrosshairPrefab;
+                        cb._defaultCrosshairPrefab = defaultCrosshairPrefab;
                     }
                 }
                 else
                 {
-                    if (cb.crosshairPrefab == defaultCrosshairPrefab)
+                    if (cb._defaultCrosshairPrefab == defaultCrosshairPrefab)
                     {
-                        cb.crosshairPrefab = emptyCrosshairPrefab;
+                        cb._defaultCrosshairPrefab = emptyCrosshairPrefab;
                     }
                 }
             }

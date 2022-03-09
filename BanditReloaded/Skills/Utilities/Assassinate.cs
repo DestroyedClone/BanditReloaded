@@ -35,22 +35,22 @@ namespace EntityStates.BanditReloadedSkills
                 }
             }
             Util.PlaySound(Assassinate.beginChargeSoundString, base.gameObject);
-            this.defaultCrosshairPrefab = base.characterBody.crosshairPrefab;
-            base.characterBody.crosshairPrefab = specialCrosshairPrefab;
+            this.defaultCrosshairPrefab = base.characterBody._defaultCrosshairPrefab;
+            base.characterBody._defaultCrosshairPrefab = specialCrosshairPrefab;
 
             if (base.characterBody)
             {
-                if (base.characterBody.HasBuff(ModContentPack.cloakDamageBuff))
+                if (base.characterBody.HasBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff))
                 {
-                    base.characterBody.ClearTimedBuffs(ModContentPack.cloakDamageBuff);
-                    base.characterBody.AddTimedBuff(ModContentPack.cloakDamageBuff, this.chargeDuration + 0.5f);
+                    base.characterBody.ClearTimedBuffs(BanditReloaded.Modules.BanditContent.cloakDamageBuff);
+                    base.characterBody.AddTimedBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff, this.chargeDuration + 0.5f);
                 }
             }
         }
 
         public override void OnExit()
         {
-            base.characterBody.crosshairPrefab = this.defaultCrosshairPrefab;
+            base.characterBody._defaultCrosshairPrefab = this.defaultCrosshairPrefab;
             base.cameraTargetParams.fovOverride = -1f;
             if (this.chargeupVfxGameObject)
             {
@@ -88,13 +88,13 @@ namespace EntityStates.BanditReloadedSkills
                             EffectManager.SimpleMuzzleFlash(FireChargeShot.effectPrefab, base.gameObject, muzzleName, false);
                         }
                     }
-                    base.characterBody.crosshairPrefab = perfectCrosshairPrefab;
+                    base.characterBody._defaultCrosshairPrefab = perfectCrosshairPrefab;
                 }
                 else
                 {
-                    if (base.characterBody.crosshairPrefab != specialCrosshairPrefab)
+                    if (base.characterBody._defaultCrosshairPrefab != specialCrosshairPrefab)
                     {
-                        base.characterBody.crosshairPrefab = specialCrosshairPrefab;
+                        base.characterBody._defaultCrosshairPrefab = specialCrosshairPrefab;
                     }
                     this.chargeCoefficient = 1f;
                 }

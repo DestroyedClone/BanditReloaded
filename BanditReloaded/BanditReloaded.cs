@@ -49,7 +49,7 @@ namespace BanditReloaded
         public GameObject ClusterBombGhostObject = null;
         public GameObject ClusterBombletGhostObject = null;
 
-        public Color BanditColor = new Color(0.8039216f, 0.482352942f, 0.843137264f);
+        public static Color BanditColor = new Color(0.8039216f, 0.482352942f, 0.843137264f);
         String BanditBodyName = "";
 
         readonly Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
@@ -89,7 +89,7 @@ namespace BanditReloaded
         }
         private void ContentManager_collectContentPackProviders(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
         {
-            addContentPackProvider(new ModContentPack());
+            addContentPackProvider(new BanditContent());
         }
 
         public void Start()
@@ -110,7 +110,7 @@ namespace BanditReloaded
             CompatSetup();
             Modules.Config.ReadConfig(base.Config);
             //LoadResources();
-            ModContentPack.LoadResources();
+            BanditContent.LoadResources();
             Modules.Assets.InitializeAssets();
             CreatePrefab();
             CreateDisplayPrefab();
@@ -127,10 +127,8 @@ namespace BanditReloaded
             //SniperContent.SpotterDebuffOnHit = DamageAPI.ReserveDamageType();
             //SniperContent.Shock5sNoDamage = DamageAPI.ReserveDamageType();
 
-            SetAttributes();
             AssignSkills();
             CreateMaster();
-            CreateBuffs();
 
             if (Modules.Config.useOldModel)
             {
@@ -185,7 +183,7 @@ namespace BanditReloaded
             BanditBody = R2API.PrefabAPI.InstantiateClone(Modules.Config.useOldModel ? Resources.Load<GameObject>("prefabs/characterbodies/banditbody") : Resources.Load<GameObject>("prefabs/characterbodies/bandit2body"), "BanditReloadedBody", true);
             BanditBodyName = BanditBody.name;
 
-            ModContentPack.bodyPrefabs.Add(BanditBody);
+            BanditContent.bodyPrefabs.Add(BanditBody);
         }
         private void CreateDisplayPrefab()
         {
@@ -209,8 +207,7 @@ namespace BanditReloaded
             BanditSurvivorDef.primaryColor = BanditColor;
             BanditSurvivorDef.outroFlavorToken = "BANDITRELOADED_OUTRO_FLAVOR";
             BanditSurvivorDef.desiredSortPosition = 100f;
-            ModContentPack.survivorDefs.Add(BanditSurvivorDef);
-            ModContentPack.banditReloadedSurvivor = BanditSurvivorDef;
+            BanditContent.survivorDefs.Add(BanditSurvivorDef);
         }
 
         public void SetupStats()
@@ -252,7 +249,7 @@ namespace BanditReloaded
                     cb.levelArmor = 0f;
 
                     cb.hideCrosshair = false;
-                    cb.crosshairPrefab = Resources.Load<GameObject>("prefabs/crosshair/banditcrosshair");
+                    cb._defaultCrosshairPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/crosshair/banditcrosshair");
                 }
             }
         }
@@ -798,11 +795,11 @@ namespace BanditReloaded
         {
             AcidBombObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/banditgrenadeprojectile"), "BanditReloadedAcidBomb", true);
             AcidBombGhostObject = R2API.PrefabAPI.InstantiateClone(AcidBombObject.GetComponent<ProjectileController>().ghostPrefab, "BanditReloadedAcidBombGhost", false);
-            ModContentPack.projectilePrefabs.Add(AcidBombObject);
+            BanditContent.projectilePrefabs.Add(AcidBombObject);
             AcidBombObject.GetComponent<ProjectileController>().ghostPrefab = AcidBombGhostObject;
 
             GameObject puddleObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/crocoleapacid"), "BanditReloadedAcidBombPuddle", true);
-            ModContentPack.projectilePrefabs.Add(puddleObject);
+            BanditContent.projectilePrefabs.Add(puddleObject);
             ProjectileDamage puddleDamage = puddleObject.GetComponent<ProjectileDamage>();
             puddleDamage.damageType = DamageType.WeakOnHit;
             ProjectileDotZone pdz = puddleObject.GetComponent<ProjectileDotZone>();
@@ -816,9 +813,9 @@ namespace BanditReloaded
             //ec.applyScale = true;
             //ec.disregardZScale = false;
             ec.soundName = "Play_acrid_shift_land";
-            ModContentPack.effectDefs.Add(new EffectDef(abImpact));
+            BanditContent.effectDefs.Add(new EffectDef(abImpact));
 
-            AcidBombObject.GetComponent<ProjectileSimple>().velocity = 60f;
+            AcidBombObject.GetComponent<ProjectileSimple>().desiredForwardSpeed = 60f;
             ProjectileImpactExplosion abPIE = AcidBombObject.GetComponent<ProjectileImpactExplosion>();
             abPIE.blastRadius = Modules.Config.acidRadius;
             AcidBombObject.GetComponent<ProjectileDamage>().damageType = DamageType.WeakOnHit;
@@ -845,7 +842,7 @@ namespace BanditReloaded
         {
             ThermiteObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/thermite"), "BanditReloadedThermite", true);
             ThermiteGhostObject = R2API.PrefabAPI.InstantiateClone(ThermiteObject.GetComponent<ProjectileController>().ghostPrefab, "BanditReloadedThermiteGhost", false);
-            ModContentPack.projectilePrefabs.Add(ThermiteObject);
+            BanditContent.projectilePrefabs.Add(ThermiteObject);
             ThermiteObject.GetComponent<ProjectileController>().ghostPrefab = ThermiteGhostObject;
 
             ProjectileImpactExplosion tPIE = ThermiteObject.GetComponent<ProjectileImpactExplosion>();
@@ -893,7 +890,7 @@ namespace BanditReloaded
 
             GameObject thermiteBurnEffect = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/impacteffects/missileexplosionvfx"), "BanditReloadedThermiteBurnEffect", false);
             thermiteBurnEffect.GetComponent<EffectComponent>().soundName = "Play_BanditReloaded_burn";
-            ModContentPack.effectDefs.Add(new EffectDef(thermiteBurnEffect));
+            BanditContent.effectDefs.Add(new EffectDef(thermiteBurnEffect));
             BootlegThermiteOverlapAttack.burnEffectPrefab = thermiteBurnEffect;
             ThermiteBomb.projectilePrefab = ThermiteObject;
         }
@@ -901,7 +898,7 @@ namespace BanditReloaded
         private void SetupClusterBomb()
         {
             ClusterBombObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/BanditClusterBombSeed"), "BanditReloadedClusterBomb", true);
-            ModContentPack.projectilePrefabs.Add(ClusterBombObject);
+            BanditContent.projectilePrefabs.Add(ClusterBombObject);
 
             ClusterBombGhostObject = R2API.PrefabAPI.InstantiateClone(BanditContent.assetBundle.LoadAsset<GameObject>("DynamiteBundle.prefab"), "BanditReloadedClusterBombGhost", true);
             ClusterBombGhostObject.GetComponentInChildren<MeshRenderer>().material.shader = hotpoo;
@@ -965,7 +962,7 @@ namespace BanditReloaded
             pie.blastProcCoefficient = 1f;
             pie.impactEffect = SetupDynamiteExplosion();
 
-            pie.explosionEffect = null;
+            pie.explosionSoundString = null;
             pie.lifetimeExpiredSound = null;
             pie.projectileHealthComponent = hc;
             pie.transformSpace = ProjectileImpactExplosion.TransformSpace.World;
@@ -1037,14 +1034,14 @@ namespace BanditReloaded
             EffectComponent ec = dynamiteExplosion.GetComponent<EffectComponent>();
             ec.soundName = "Play_BanditReloaded_dynamite";
 
-            ModContentPack.effectDefs.Add(new EffectDef(dynamiteExplosion));
+            BanditContent.effectDefs.Add(new EffectDef(dynamiteExplosion));
             return dynamiteExplosion;
         }
 
         private void SetupClusterBomblet()
         {
             ClusterBombletObject = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/projectiles/BanditClusterGrenadeProjectile"), "BanditReloadedClusterBomblet", true);
-            ModContentPack.projectilePrefabs.Add(ClusterBombletObject);
+            BanditContent.projectilePrefabs.Add(ClusterBombletObject);
 
             ClusterBombletGhostObject = R2API.PrefabAPI.InstantiateClone(BanditContent.assetBundle.LoadAsset<GameObject>("DynamiteStick.prefab"), "BanditReloadedClusterBombletGhost", true);
             ClusterBombletGhostObject.GetComponentInChildren<MeshRenderer>().material.shader = hotpoo;
@@ -1063,7 +1060,7 @@ namespace BanditReloaded
             pie.lifetime = 1.5f;
             pie.timerAfterImpact = false;
             pie.blastProcCoefficient = Modules.Config.cbBombletProcCoefficient;
-            pie.explosionEffect = null;
+            pie.explosionSoundString = null;
             pie.impactEffect = SetupDynamiteBombletExplosion();
 
             Destroy(ClusterBombletObject.GetComponent<ProjectileStickOnImpact>());
@@ -1082,14 +1079,14 @@ namespace BanditReloaded
             EffectComponent ec = dynamiteExplosion.GetComponent<EffectComponent>();
             ec.soundName = "Play_engi_M2_explo";
 
-            ModContentPack.effectDefs.Add(new EffectDef(dynamiteExplosion));
+            BanditContent.effectDefs.Add(new EffectDef(dynamiteExplosion));
             return dynamiteExplosion;
         }
 
         private void CreateMaster()
         {
             BanditMonsterMaster = R2API.PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/charactermasters/commandomonstermaster"), "BanditReloadedMonsterMaster", true);
-            ModContentPack.masterPrefabs.Add(BanditMonsterMaster);
+            BanditContent.masterPrefabs.Add(BanditMonsterMaster);
 
             CharacterMaster cm = BanditMonsterMaster.GetComponent<CharacterMaster>();
             cm.bodyPrefab = BanditBody;
@@ -1313,47 +1310,6 @@ namespace BanditReloaded
             afk.shouldSprint = true;
             afk.shouldFireEquipment = false;
             afk.shouldTapButton = false;
-        }
-
-
-
-        private void CreateBuffs()
-        {
-            BuffDef LightsOutBuffDef = BuffDef.CreateInstance<BuffDef>();
-            LightsOutBuffDef.buffColor = BanditColor;
-            LightsOutBuffDef.canStack = false;
-            LightsOutBuffDef.isDebuff = true;
-            LightsOutBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffFullCritIcon");
-            LightsOutBuffDef.name = "BanditReloadedMarkedForDeath";
-            ModContentPack.buffDefs.Add(LightsOutBuffDef);
-            ModContentPack.lightsOutBuff = LightsOutBuffDef;
-
-            BuffDef ThermiteBuffDef = BuffDef.CreateInstance<BuffDef>();
-            ThermiteBuffDef.buffColor = BanditColor;
-            ThermiteBuffDef.canStack = true;
-            ThermiteBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffOnFireIcon");
-            ThermiteBuffDef.isDebuff = true;
-            ThermiteBuffDef.name = "BanditReloadedThermite";
-            ModContentPack.buffDefs.Add(ThermiteBuffDef);
-            ModContentPack.thermiteBuff = ThermiteBuffDef;
-
-            BuffDef cloakDamageBuffDef = BuffDef.CreateInstance<BuffDef>();
-            cloakDamageBuffDef.buffColor = BanditColor;
-            cloakDamageBuffDef.canStack = false;
-            cloakDamageBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffFullCritIcon");
-            cloakDamageBuffDef.name = "BanditReloadedCloakDamage";
-            cloakDamageBuffDef.isDebuff = false;
-            ModContentPack.buffDefs.Add(cloakDamageBuffDef);
-            ModContentPack.cloakDamageBuff = cloakDamageBuffDef;
-
-            BuffDef skullBuffDef = BuffDef.CreateInstance<BuffDef>();
-            skullBuffDef.buffColor = BanditColor;
-            skullBuffDef.canStack = true;
-            skullBuffDef.iconSprite = Resources.Load<Sprite>("Textures/BuffIcons/texBuffBanditSkullIcon");
-            skullBuffDef.isDebuff = true;
-            skullBuffDef.name = "BanditReloadedSkull";
-            ModContentPack.buffDefs.Add(skullBuffDef);
-            ModContentPack.skullBuff = skullBuffDef;
         }
 
         public static void AddClassicSkin()    //credits to rob

@@ -37,10 +37,10 @@ namespace EntityStates.BanditReloadedSkills
                 base.characterBody.SetAimTimer(this.duration);
                 BanditHelpers.TriggerQuickdraw(base.characterBody.skillLocator);
 
-                if (base.characterBody.HasBuff(ModContentPack.cloakDamageBuff))
+                if (base.characterBody.HasBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff))
                 {
-                    base.characterBody.ClearTimedBuffs(ModContentPack.cloakDamageBuff);
-                    base.characterBody.AddTimedBuff(ModContentPack.cloakDamageBuff, 1.2f);
+                    base.characterBody.ClearTimedBuffs(BanditReloaded.Modules.BanditContent.cloakDamageBuff);
+                    base.characterBody.AddTimedBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff, 1.2f);
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace EntityStates.BanditReloadedSkills
 
         public override void OnExit()
         {
-            if (!BanditReloaded.BanditReloaded.useOldModel)
+            if (!BanditReloaded.Modules.Config.useOldModel)
             {
                 if (this.animator)
                 {
@@ -103,7 +103,7 @@ namespace EntityStates.BanditReloadedSkills
             isCrit = base.RollCrit();
 
             this.animator = base.GetModelAnimator();
-            if (this.animator && !BanditReloaded.BanditReloaded.useOldModel)
+            if (this.animator && !BanditReloaded.Modules.Config.useOldModel)
             {
                 this.bodySideWeaponLayerIndex = this.animator.GetLayerIndex("Body, SideWeapon");
                 this.animator.SetLayerWeight(this.bodySideWeaponLayerIndex, 1f);
@@ -114,7 +114,7 @@ namespace EntityStates.BanditReloadedSkills
         {
             BanditHelpers.ConsumeCloakDamageBuff(base.characterBody);
             base.characterBody.SetSpreadBloom(0f, false);
-            if (earlyExit && !BanditReloaded.BanditReloaded.useOldModel)
+            if (earlyExit && !BanditReloaded.Modules.Config.useOldModel)
             {
                 if (this.animator)
                 {
@@ -144,7 +144,7 @@ namespace EntityStates.BanditReloadedSkills
                     Ray aimRay = base.GetAimRay();
                     muzzleName = "MuzzlePistol";
                     Util.PlaySound(FireBarrageScepter.attackSoundString, base.gameObject);
-                    if (BanditReloaded.BanditReloaded.useOldModel)
+                    if (BanditReloaded.Modules.Config.useOldModel)
                     {
                         base.PlayAnimation("Gesture, Additive", "FireRevolver");
                         base.PlayAnimation("Gesture, Override", "FireRevolver");

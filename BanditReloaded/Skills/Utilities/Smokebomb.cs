@@ -25,14 +25,14 @@ namespace EntityStates.BanditReloadedSkills
                 {
                     base.characterBody.AddBuff(RoR2Content.Buffs.Cloak);
                     base.characterBody.AddBuff(RoR2Content.Buffs.CloakSpeed);
-                    base.characterBody.AddTimedBuff(ModContentPack.cloakDamageBuff, CastSmokescreenNoDelay.duration + 0.5f);
+                    base.characterBody.AddTimedBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff, CastSmokescreenNoDelay.duration + 0.5f);
                 }
                 BanditHelpers.TriggerQuickdraw(base.characterBody.skillLocator);
             }
 
             if (base.characterMotor && !base.characterMotor.isGrounded)
             {
-                if (!BanditReloaded.BanditReloaded.useOldModel)
+                if (!BanditReloaded.Modules.Config.useOldModel)
                 {
                     base.PlayAnimation("Gesture, Additive", "ThrowSmokebomb", "ThrowSmokebomb.playbackRate", 0.2f);
                 }
@@ -123,7 +123,7 @@ namespace EntityStates.BanditReloadedSkills
                     damageType = CastSmokescreenNoDelay.nonLethal ? (DamageType.Stun1s | DamageType.NonLethal) : DamageType.Stun1s,
                     procCoefficient = CastSmokescreenNoDelay.procCoefficient,
                     crit = base.RollCrit(),
-                    attackerFiltering = AttackerFiltering.NeverHit
+                    attackerFiltering = AttackerFiltering.NeverHitSelf
                 }.Fire();
             }
 
