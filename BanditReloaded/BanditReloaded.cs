@@ -30,6 +30,14 @@ namespace BanditReloaded
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     class BanditReloaded : BaseUnityPlugin
     {
+        //TODO:
+        // 1. Rebuild soundbank:
+        //[Error: Unity Log] WwiseUnity: AkMemBankLoader: bank loading failed with result AK_WrongBankVersion
+        // 2. Reassign AncientScepter refs once updated
+        // 3. Setup effects, causes errors on use ingame. Missing bullet tracers?
+
+
+
         public static SurvivorDef BanditSurvivorDef;
 
         public ReloadSkillDef primaryBlastDef, primaryScatterDef;
