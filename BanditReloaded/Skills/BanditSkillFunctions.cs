@@ -19,13 +19,13 @@ namespace EntityStates.BanditReloadedSkills
         {
             if (NetworkServer.active && cb)
             {
-                cb.ClearTimedBuffs(ModContentPack.cloakDamageBuff);
+                cb.ClearTimedBuffs(BanditReloaded.Modules.BanditContent.cloakDamageBuff);
             }
         }
 
         public static void PlayCloakDamageSound(CharacterBody cb)
         {
-            if (cb && cb.HasBuff(ModContentPack.cloakDamageBuff))
+            if (cb && cb.HasBuff(BanditReloaded.Modules.BanditContent.cloakDamageBuff))
             {
                 Util.PlaySound("Play_BanditReloaded_cloakdamage", cb.gameObject);
             }

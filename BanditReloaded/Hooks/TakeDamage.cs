@@ -64,7 +64,7 @@ namespace BanditReloaded.Hooks
                     {
                         if (self.body.HasBuff(buffType))
                         {
-                            if (buffType != ModContentPack.skullBuff.buffIndex)
+                            if (buffType != Modules.BanditContent.skullBuff.buffIndex)
                             {
                                 debuffCount++;
                             }
@@ -86,7 +86,7 @@ namespace BanditReloaded.Hooks
                         }
                     }
 
-                    if (isBarrage && self.body.HasBuff(ModContentPack.lightsOutBuff))
+                    if (isBarrage && self.body.HasBuff(Modules.BanditContent.lightsOutBuff))
                     {
                         debuffCount--;
                     }
@@ -177,9 +177,9 @@ namespace BanditReloaded.Hooks
                     {
                         if (isBarrage)
                         {
-                            self.body.AddTimedBuff(ModContentPack.skullBuff, 3f);
+                            self.body.AddTimedBuff(Modules.BanditContent.skullBuff, 3f);
                         }
-                        self.body.AddTimedBuff(ModContentPack.lightsOutBuff, resetDuration);
+                        self.body.AddTimedBuff(Modules.BanditContent.lightsOutBuff, resetDuration);
 
                         if (graceComponent && resetDuration > 0f)
                         {
@@ -188,7 +188,7 @@ namespace BanditReloaded.Hooks
                     }
                 }
 
-                if (self.body.HasBuff(ModContentPack.lightsOutBuff) && specialExecuteThreshold > 0f)
+                if (self.body.HasBuff(Modules.BanditContent.lightsOutBuff) && specialExecuteThreshold > 0f)
                 {
                     if (((self.body.bodyFlags & CharacterBody.BodyFlags.ImmuneToExecutes) == 0 && !self.body.isChampion) || specialExecuteBosses)
                     {
