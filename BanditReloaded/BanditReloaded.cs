@@ -239,15 +239,15 @@ namespace BanditReloaded
                 SkillLocator sk = BanditBody.GetComponent<SkillLocator>();
                 if (sk)
                 {
-                    AssignPrimary(sk);
-                    AssignSecondary(sk);
-                    AssignUtility(sk);
-                    AssignSpecial(sk);
-
                     sk.passiveSkill.enabled = true;
                     sk.passiveSkill.skillNameToken = "BANDITRELOADED_PASSIVE_NAME";
                     sk.passiveSkill.skillDescriptionToken = "BANDITRELOADED_PASSIVE_DESCRIPTION";
                     sk.passiveSkill.icon = BanditContent.assetBundle.LoadAsset<Sprite>("quickdraw.png");
+
+                    AssignPrimary(sk);
+                    AssignSecondary(sk);
+                    AssignUtility(sk);
+                    AssignSpecial(sk);
                 }
             }
         }
