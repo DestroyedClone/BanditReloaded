@@ -1,26 +1,11 @@
 ﻿using RoR2;
-using RoR2.Skills;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using RoR2.ContentManagement;
-using System.Collections;
-using R2API;
 using RoR2.Skills;
-using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using MonoMod.Cil;
-using Mono.Cecil.Cil;
 using System.Reflection;
-using RoR2.ContentManagement;
-using System.Collections;
-using BanditReloaded;
-using BanditReloaded.Components;
-
+using UnityEngine;
 
 namespace BanditReloaded.Modules
 {
@@ -136,6 +121,5 @@ namespace BanditReloaded.Modules
             BanditContent.buffDefs.Add(skullBuffDef);
             BanditContent.skullBuff = skullBuffDef;
         }
-
     }
 }
